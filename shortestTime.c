@@ -1,76 +1,96 @@
 #include<stdio.h>
-#include<curses.h> //#include<conio.h>
+#include<curses.h> // #include<conio.h> for windows system
+
 void main()
 {
- int pid[10], a[10],b[10],x[10];
- int waiting[10],turnaround[10],completion[10];
- int i,j,smallest,count=0,time,n;
- double avg=0,tt=0,end;
- //clrscr();
+  // Variable declaration
+ int pid[10], arriv_Time[10], burst_Time[10], x[10];
+ int waiting[10], turnaround[10], completion[10];
+ int i, j, smallest, count = 0, time, n;
+ double avg = 0,tt = 0, end;
+ 
+
+ // Enter number of processes
  printf("\nEnter the number of Processes: ");
  scanf("%d",&n);
+
+ // number processes
  for(i = 0; i < n; i++){
    pid[i] = i+1;
- }
- for(i=0;i<n;i++)
+ } 
+
+// Enter Processes' arrival Time
+ for(i = 0; i < n; i++)
  {
-   printf("\nEnter arrival time of process %d : ",i+1);
-   scanf("%d",&a[i]);
+   printf("\nEnter arrival time of process %d : ", i+1);
+   scanf("%d", &arriv_Time[i]);
  }
- for(i=0;i<n;i++)
+
+// Enter burst time of processes (Execution time)
+ for(i = 0; i < n; i++)
  {
    printf("\nEnter burst time of process %d : ",i+1);
-   scanf("%d",&b[i]);
+   scanf("%d", &burst_Time[i]);
  }
- for(i=0;i<n;i++)
- x[i]=b[i];
 
-  b[9]=9999;
+ for(i = 0; i < n; i++)
+ x[i]=burst_Time[i];
+
+  burst_Time[9]=9999;
+
  //printf("time => process number");
- for(time=0;count!=n;time++)
- {
-   smallest=9;
-  for(i=0;i<n;i++)
-  {
-   if(a[i]<=time && b[i]<b[smallest] && b[i]>0 )
-   smallest=i;
-  }
-  b[smallest]--;
-  //printf("\n%d => p%d",time+1,smallest);
-  if(b[smallest]==0)
-  {
-   count++;
-   end=time+1;
-   completion[smallest] = end;
-   waiting[smallest] = end - a[smallest] - x[smallest];
-   turnaround[smallest] = end - a[smallest];
-   // printf("\n %d  %d   %d",smallest,wt[smallest],ttp[smallest]);
-  }
- }
 
-printf("\nBefore Sorting base on Turnaround Time\n==============================\n");
-printf("pid \t burst \t arrival \twaiting \tturnaround \tcompletion");
- for(i=0;i<n;i++)
+ for(time = 0; count != n; time++)
  {
-   printf("\n %d \t   %d \t %d\t\t%d   \t\t%d\t\t%d",i+1,x[i],a[i],waiting[i],turnaround[i],completion[i]);
+
+   smallest = 9;
+
+  for(i = 0; i < n; i++)
+  {
+
+   if(arriv_Time[i] <= time && burst_Time[i] < burst_Time[smallest] && burst_Time[i]>0 )
+   smallest=i;
+
+  }
+
+  burst_Time[smallest]--;
+
+
+  if(burst_Time[smallest] == 0)
+  {
+
+   count++;
+   end = time+1;
+   completion[smallest] = end;
+   waiting[smallest] = end - arriv_Time[smallest] - x[smallest];
+   turnaround[smallest] = end - arriv_Time[smallest];
+
+  }
+
+}
+
+printf("\n\nBefore Sorting base on Turnaround Time\n================================================\n\n");
+printf("pid \t burst \t arrival \twaiting \tturnaround \tcompletion");
+ for(i = 0; i < n; i++)
+ {
+   printf("\n %d \t   %d \t %d\t\t%d   \t\t%d\t\t%d", pid[i], x[i], arriv_Time[i], waiting[i], turnaround[i], completion[i]);
    avg = avg + waiting[i];
    tt = tt + turnaround[i];
  }
 
- printf("\n  %If   %If",avg,tt);
+ printf("\n  %If   %If", avg,tt);
  printf("\n\nAverage waiting time = %lf\n",avg/n);
- printf("Average Turnaround time = %lf",tt/n);
+ printf("Average Turnaround time = %lf\n\n",tt/n);
  getch();
 
-printf("\nAfter Sorting base on Turnaround Time\n==============================\n");
- printf("pid \t burst \t arrival \twaiting \tturnaround \tcompletion");
- for(i=0;i<n;i++)
+printf("\n\nAfter Sorting base on Turnaround Time\n================================================\n\n");
+printf("pid \t burst \t arrival \twaiting \tturnaround \tcompletion");
+
+ for(i = 0; i < n; i++)
  {
 	 
 	 int j, s;
  
-//        for (i = 0; i < n; ++i) 
-//        {
  
             for (j = i + 1; j < n; ++j)
             {
@@ -96,9 +116,9 @@ printf("\nAfter Sorting base on Turnaround Time\n==============================\
                     completion[i] = completion[j];
                     completion[j] = s;
 
-                    s =  a[i];
-                    a[i] = a[j];
-                    a[j] = s;
+                    s =  arriv_Time[i];
+                    arriv_Time[i] = arriv_Time[j];
+                    arriv_Time[j] = s;
 
                     s =  x[i];
                     x[i] = x[j];
@@ -106,19 +126,19 @@ printf("\nAfter Sorting base on Turnaround Time\n==============================\
  
                 }
 
-//            }
+
 	  }
 
 	 
 
  
 
-   printf("\n %d \t   %d \t %d\t\t%d   \t\t%d\t\t%d",pid[i],x[i],a[i],waiting[i],turnaround[i],completion[i]);
+   printf("\n %d \t   %d \t %d\t\t%d   \t\t%d\t\t%d", pid[i], x[i], arriv_Time[i], waiting[i], turnaround[i], completion[i]);
    avg = avg + waiting[i];
    tt = tt + turnaround[i];
  }
- //printf("\n  %If   %If",avg,tt);
+ 
  printf("\n\nAverage waiting time = %lf\n",avg/n);
- printf("Average Turnaround time = %lf",tt/n);
+ printf("Average Turnaround time = %lf\n\n",tt/n);
  getch();
 }
